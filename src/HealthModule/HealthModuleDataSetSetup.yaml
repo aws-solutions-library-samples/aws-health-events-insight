@@ -121,6 +121,7 @@ Resources:
                           detail.eventMetadata,
                           CASE 
                               WHEN ((detail.eventTypeCategory = 'scheduledChange') AND (detail.eventArn like '%PLANNED_LIFECYCLE_EVENT%')) THEN 'PlannedLifeCycle'
+                              -- WHEN ((detail.eventTypeCategory = 'scheduledChange') AND (detail.eventArn like '%MAINTENANCE_SCHEDULED%')) THEN 'ScheduledMaintenance'
                               ELSE detail.eventTypeCategory
                           END AS "eventTypeCategory",
                           detail.eventArn,

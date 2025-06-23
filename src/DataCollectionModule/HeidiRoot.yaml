@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Root stack for DataCollection Bus ES-Heidi
+Description: Root stack for DataCollection ES-Heidi (SO9034)
 
 Parameters:
   AWSOrganizationID:
