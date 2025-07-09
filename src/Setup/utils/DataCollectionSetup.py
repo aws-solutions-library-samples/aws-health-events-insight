@@ -6,14 +6,33 @@ import os
 
 # Get Tag
 def tag():
-    # Get the default AWS region from the current session
-    tag_key = input("Enter the key to tag the stack (Hit enter to use default: 'App'): ") or "App"
+    """Get multiple tag key-value pairs from user input"""
+    tags = {}
+    
+    # Get the first tag with defaults
+    tag_key = input("Enter the first tag key (Hit enter to use default: 'App'): ") or "App"
     tag_value = input(f"Enter the value for '{tag_key}' (Hit enter to use default: 'Heidi'): ") or "Heidi"
-    return tag_key, tag_value
+    tags[tag_key] = tag_value
+    
+    # Allow user to add more tags
+    while True:
+        add_more = input("Do you want to add another tag? (yes/no): ").lower().strip()
+        if add_more in ['yes', 'y']:
+            tag_key = input("Enter tag key: ").strip()
+            if tag_key:
+                tag_value = input(f"Enter value for '{tag_key}': ").strip()
+                tags[tag_key] = tag_value
+            else:
+                print("Tag key cannot be empty. Skipping...")
+        elif add_more in ['no', 'n']:
+            break
+        else:
+            print("Invalid input. Please enter 'yes' or 'no'.")
+    
+    return tags
 
-
-# Call the tag function to get the tag key and value
-tag_key, tag_value = tag()
+# Call the tag function to get the tags dictionary
+tags_dict = tag()
 
 
 #Get Current Region
@@ -76,11 +95,11 @@ def create_or_get_s3_bucket(account_id, region):
         print(f"S3 bucket {bucket_name} has been created")
 
         # Add tags to the newly created bucket
-        tagging = {
-            'TagSet': [{'Key': tag_key, 'Value': tag_value},]}
+        tag_set = [{'Key': key, 'Value': value} for key, value in tags_dict.items()]
+        tagging = {'TagSet': tag_set}
         
         s3_client.put_bucket_tagging(Bucket=bucket_name, Tagging=tagging)
-        print(f"Tags added to bucket {bucket_name}")
+        print(f"Tags added to bucket {bucket_name}: {tags_dict}")
         
     return bucket_name, bucketkmsarn
 
@@ -355,8 +374,7 @@ def setup():
                 f"EnableNotificationModule={parameters_dict['EnableNotificationModule']} " 
     
     #Update tags here
-    # Call the tag function to get the tag key and value
-    tags =  f"{tag_key}={tag_value} "
+    tags = " ".join([f"{key}={value}" for key, value in tags_dict.items()])
                 
     command= f"sam deploy --stack-name {stack_name} --region {parameters_dict['DataCollectionRegion']} --parameter-overrides {parameters}\
         --template-file ../DataCollectionModule/HeidiRoot.yaml --tags {tags} --capabilities CAPABILITY_NAMED_IAM --disable-rollback"
