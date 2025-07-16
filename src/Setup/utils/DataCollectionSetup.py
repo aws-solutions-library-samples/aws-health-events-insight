@@ -31,9 +31,8 @@ def tag():
     
     return tags
 
-# Call the tag function to get the tags dictionary
-tags_dict = tag()
-
+# Initialize tags_dict - will be populated in setup()
+tags_dict = {}
 
 #Get Current Region
 def get_default_region():
@@ -332,6 +331,10 @@ def read_parameters(file_path):
     }
 
 def setup():
+    # Get tag information from user
+    global tags_dict
+    tags_dict = tag()
+    
     file_path = 'utils/ParametersDataCollection.txt'
 
     if os.path.exists(file_path):

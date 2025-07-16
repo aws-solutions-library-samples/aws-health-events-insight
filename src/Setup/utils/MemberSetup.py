@@ -30,8 +30,8 @@ def tag():
     
     return tags
 
-# Call the tag function to get the tags dictionary
-tags_dict = tag()
+# Initialize tags_dict - will be populated in setup()
+tags_dict = {}
 
 # Get Current Account ID
 def get_account_id():
@@ -81,6 +81,10 @@ def get_user_input():
 
 # setup
 def setup():
+    # Get tag information from user
+    global tags_dict
+    tags_dict = tag()
+    
     parameters_dict = {}
     DataCollectionAccountID, DataCollectionRegion, DeploymentRegionHealth, ResourcePrefix = get_user_input()
 
