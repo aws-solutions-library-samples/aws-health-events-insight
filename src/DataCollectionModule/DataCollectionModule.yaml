@@ -40,7 +40,7 @@ Parameters:
 Outputs:
   HeidiQSDataSourceArn:
     Condition: DeployDataCollectionComponents
-    Value: !GetAtt HeidiQSDataSource.Arn
+    Value: !GetAtt HeidiQSDataSourceV2.Arn
     Export:
       Name: !Sub ${ResourcePrefix}QSDataSourceArn     
   HeidiDataCollectionDB:
@@ -352,7 +352,7 @@ Resources:
         Description: "Heidi Data Collection Athena DB"
 
 # Create an AWS QuickSight DataSource for DataCollection
-  HeidiQSDataSource:
+  HeidiQSDataSourceV2:
     Condition: DeployDataCollectionComponents
     Type: AWS::QuickSight::DataSource
     Properties:
